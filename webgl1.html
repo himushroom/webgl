@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>canvas-webgl</title>
+</head>
+<body>
+    <canvas class="canvas" width="600" height="600"></canvas>
+</body>
+<script>
+    /* 第一步 获取画布，创建三维上下文对象 */
+    const canvas = document.getElementsByClassName('canvas')[0]
+    const gl = canvas.getContext('webgl')
+
+    /* 第二步 创建顶点并且将顶点数据存储到当前绑定的WebGL缓冲区 */
+    const vertices = new Float32Array([
+        0.0, 1.0,
+        -1.0, -1.0,
+        1.0, -1.0
+    ])
+    // 创建顶点缓冲区，可用于存储顶点数据或着色数据
+    const buffer = gl.createBuffer()
+    // 把buffer绑定到WebGL的`ARRAY_BUFFER`目标上，接下来的操作将会作用在这个缓冲区上
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+    // 使用 WebGL 的 bufferData() 方法将顶点数据 vertices 存储到当前绑定的缓冲区中。
+    // （指定绑定缓冲区的目标，要写入缓冲区的数据，指定数据存储的使用模式usage）
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
+    /* usage：
+        gl.STATIC_DRAW 数据不变或几乎不会改变
+        gl.DYNAMIC_DRAW 数据会频繁改变
+        gl.STREAM_DRAW 数据每次绘制时都会改变
+    */
+    
+    /* 第三步 定义顶点着色器和片元着色器 */
+    // 定义顶点着色器
+    const vertexShaderSource = `
+        attribute vec2 position;
+        void main() {
+            gl_Position = vec4(position, 0.0, 1.0);
+        }
+    `;
+    // 定义片元着色器
+    const fragmentShaderSource = `
+        void main() {
+            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0)
+        }
+    `;
+    
+    /* 第四步 创建和编译顶点着色器、片元着色器 */
+    // 创建一个WebGLShader顶点着色器对象
+    const vertexShader = gl.createShader(gl.VERTEX_SHADER)
+    // 将顶点着色器源码绑定到顶点着色器对象。
+    gl.shaderSource(vertexShader, vertexShaderSource)
+    // 编译顶点着色器。
+    gl.compileShader(vertexShader)
+
+    // 创建一个WebGLShader片元着色器对象
+    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
+    gl.shaderSource(fragmentShader, fragmentShaderSource)
+    gl.compileShader(fragmentShader)
+    
+    /* 第五步 创建着色器程序对象 */
+    // 创建一个着色器程序对象
+    const program = gl.createProgram()
+    // 将顶点着色器附加到着色器程序对象
+    gl.attachShader(program, vertexShader)
+    // 将片元着色器附加到着色器程序对象
+    gl.attachShader(program, fragmentShader)
+    // 链接着色器程序对象，将顶点着色器和片元着色器链接成一个完整的可执行程序
+    gl.linkProgram(program)
+    // 告诉 WebGL 使用这个着色器程序对象作为当前的渲染程序
+    gl.useProgram(program)
+    
+    /* 第六步 设置顶点属性 */
+    // 获取顶点属性 position
+    const positionLocation = gl.getAttribLocation(program, 'position')
+    // 启用顶点属性数组
+    gl.enableVertexAttribArray(positionLocation)
+    // 指定如何解析顶点数据数组 (顶点属性position的位置，每个顶点属性的元素数量，数据类型，数据是否应该被标准化（不标准化），跨度，偏移量)
+    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
+
+    /* 第七步 清空画布和控制 */
+    // 设置清空颜色为黑色
+    gl.clearColor(0.0, 0.0, 0.0, 1.0)
+    // 清空颜色缓冲区
+    gl.clear(gl.COLOR_BUFFER_BIT)
+    // 使用顶点数组绘制三角形（制定绘制图元类型为三角形，从顶点数组的第一个顶点开始绘制，要绘制的顶点数量）
+    gl.drawArrays(gl.TRIANGLES, 0, 3)   // 图元装配
+    /*
+        gl.TRIANGLES 绘制一系列不连续的三角形
+        gl.POINT 绘制一系列点
+        gl.LINES 绘制一系列不连续的线段
+        gl.LINE_STRIP 绘制一系列连续的线段
+        gl.LINE_LOOP 绘制一个闭合的线段环
+        gl.TRIANGLE_STRIP 绘制一个三角形条带
+        gl.TRIANGLE_FAN 绘制一个三角形扇形
+    */
+</script>
+</html>
