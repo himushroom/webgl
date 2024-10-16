@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Threejs</title>
+    </head>
+    <style>
+        .wrapper {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+    <body>
+        <div class="wrapper">
+            <div id="webgl1"></div>
+            <div id="webgl2"></div>
+            <div id="webgl3"></div>
+            <div id="webgl4"></div>
+        </div>
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "./js/three.js-r148/build/three.module.js",
+                    "three/addons/": "./js/three.js-r148/examples/jsm/"
+                }
+            }
+        </script>
+        <script type="module">
+            // 引入three.js
+            import * as THREE from "three";
+            // 引入扩展库OrbitControls.js
+            import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+            // 引入扩展库GLTFLoader.js
+            import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+            function createThreeScene(dom, fn) {
+                // 定义画布尺寸
+                const width = 400;
+                const height = 400;
+
+                // 创建三维场景
+                const scene = new THREE.Scene();
+
+                // 物体形状
+                const boxGeometry = new THREE.BoxGeometry(100, 100, 100); // 长方体
+
+                /** 物体外观：材质
+                 * MeshBasicMaterial  网络基础材质
+                 * MeshLambertMaterial  网络漫反射材质
+                 * MeshStandardMaterial  MeshPhysicalMaterial 物理材质
+                 * PointsMaterial  点材质
+                 * LineBasicMaterial  线基础材质
+                 * SpriteMaterial  精灵材质，通常用于粒子系统、图标、标签，关键特性：始终面向相机（二维）
+                 * MeshPhongMaterial 高光材质，比物理材质计算量小（裹着塑料膜的感觉）
+                 */
+                // 材质叠加方法
+                fn(boxGeometry, scene);
+
+                /** 透视投影相机（类似于人眼，常用）
+                 * 视锥体（fov, aspect, near, far）之内的物体才会被渲染
+                 * fov  视场（摄像机展开的角度）  default: 50
+                 * aspect  宽高比=width/height  default: 1
+                 * near  相机视锥体近裁截面到相机的距离=最近可以看到的  default: 0.1
+                 * far  相机视锥体远裁截面到相机的具体=最远可以看到的  default: 2000
+                 */
+                const camera = new THREE.PerspectiveCamera();
+
+                camera.position.set(200, 300, 400);
+
+                // 相机观察目标
+                camera.lookAt(0, 0, 0);
+
+                // 辅助观察坐标系(坐标系坐标轴线段尺寸大小)
+                // 红R、绿G、蓝B分别对应坐标系的x、y、z轴
+                const axesHelper = new THREE.AxesHelper(100);
+                scene.add(axesHelper);
+
+                // 创建渲染器对象
+                const renderer = new THREE.WebGLRenderer();
+
+                // 定义渲染区域尺寸
+                renderer.setSize(width, height);
+
+                // 将场景渲染到画布上
+                renderer.render(scene, camera);
+                dom.appendChild(renderer.domElement);
+            }
+
+            createThreeScene(
+                document.getElementById("webgl1"),
+                (boxGeometry, scene) => {
+                    // 材质叠加方法一，使用数组设置不同面的材质
+                    const material1 = new THREE.MeshBasicMaterial({
+                        color: 0xff0000, // 红色
+                        transparent: true, // 开启透明
+                        opacity: 0.5 // 设置透明度
+                    });
+                    const material2 = new THREE.MeshBasicMaterial({
+                        color: 0xffffff // 白色
+                    });
+
+                    const material = [
+                        material1, // 右
+                        material1, // 左
+                        material1, // 顶
+                        material2, // 底
+                        material2, // 前
+                        material2 // 后
+                    ];
+
+                    // 物体：网格模型
+                    const mesh = new THREE.Mesh(boxGeometry, material);
+
+                    // 模型位置（基于坐标轴中心）
+                    mesh.position.set(50, 50, 50);
+
+                    // 将物体添加到场景中
+                    scene.add(mesh);
+                }
+            );
+            createThreeScene(
+                document.getElementById("webgl2"),
+                (boxGeometry, scene) => {
+                    // 材质叠加方法二，使用THREE.Group，材质会进行混合
+                    const material1 = new THREE.MeshBasicMaterial({
+                        color: 0xff0000, // 红色
+                        transparent: true, // 开启透明
+                        opacity: 0.5 // 设置透明度
+                    });
+                    const material2 = new THREE.MeshBasicMaterial({
+                        color: 0xffffff // 白色
+                    });
+
+                    const cube1 = new THREE.Mesh(boxGeometry, material1);
+                    const cube2 = new THREE.Mesh(boxGeometry, material2);
+
+                    const group = new THREE.Group();
+                    group.add(cube1);
+                    group.add(cube2);
+
+                    scene.add(group);
+                }
+            );
+            createThreeScene(
+                document.getElementById("webgl3"),
+                (boxGeometry, scene) => {
+                    // 材质叠加方法三，实现线框效果
+                    const material1 = new THREE.MeshBasicMaterial({
+                        color: 0xff0000, // 红色
+                        transparent: true, // 开启透明
+                        opacity: 0.5 // 设置透明度
+                    });
+
+                    // 物体：网格模型
+                    const mesh = new THREE.Mesh(boxGeometry, material1);
+
+                    // 提取几何体边缘信息
+                    const edges = new THREE.EdgesGeometry(boxGeometry);
+                    const material2 = new THREE.LineBasicMaterial({
+                        color: 0xffffff
+                    });
+
+                    // 创建由多个线段组成的对象，每两个连续的顶点定义一个线段（两两配对）
+                    // Line类会将所有点连接成一条连续的线
+                    const line = new THREE.LineSegments(edges, material2);
+
+                    mesh.add(line);
+                    // 模型位置（基于坐标轴中心）
+                    mesh.position.set(50, 50, 50);
+
+                    // 将物体添加到场景中
+                    scene.add(mesh);
+                }
+            );
+            createThreeScene(
+                document.getElementById("webgl4"),
+                (boxGeometry, scene) => {
+                    // 材质叠加方法四，使用MeshPhysicalMaterial创建带有的清漆效果，模拟多层材质
+                    // clearcoat 清漆层是MeshPhysicalMaterial独有的
+
+                    // 模拟陶瓷
+                    // const material = new THREE.MeshPhysicalMaterial({
+                    //     color: 0xffffff, // 白色
+                    //     clearcoat: 0.8,
+                    //     clearcoatRoughness: 0.2,
+                    //     metalness: 0.0,
+                    //     roughness: 0.1
+                    // });
+                    // 模拟木制家具
+                    const material = new THREE.MeshPhysicalMaterial({
+                        color: 0x8b4513, // 棕色
+                        clearcoat: 0.5,
+                        clearcoatRoughness: 0.3,
+                        metalness: 0.0,
+                        roughness: 0.7,
+                        emissive: 0x8b4513 // 设置自发光
+                    });
+                    // const material = new THREE.MeshPhysicalMaterial({
+                    //     color: 0xff0000, // 红色
+                    //     // 清漆层的强度，范围从 0 到 1
+                    //     // 清漆层模拟了一层薄的、透明的涂层，类似于汽车漆面或上了清漆的木材
+                    //     clearcoat: 1.0,
+                    //     // 控制清漆层的粗糙度，范围从 0 到 1
+                    //     // 较低的粗糙度会产生更明显的反射效果
+                    //     clearcoatRoughness: 0.1,
+                    //     // 控制材质的金属感，范围从 0（非金属）到 1（金属）
+                    //     // 非金属材质通常会散射更多的光，而金属材质则会产生更多的镜面反射
+                    //     metalness: 0.5,
+                    //     // 控制材质表面的粗糙度，范围从 0（非常光滑）到 1（非常粗糙）
+                    //     roughness: 0.1
+                    // });
+
+                    // const mesh = new THREE.Mesh(boxGeometry, material);
+                    const mesh = new THREE.Mesh(
+                        new THREE.SphereGeometry(60, 1000, 1000),
+                        material
+                    );
+
+                    // 将物体添加到场景中
+                    scene.add(mesh);
+
+                    // 添加环境光
+                    // const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                    // scene.add(ambientLight);
+
+                    // 添加平行光
+                    const directionalLight = new THREE.DirectionalLight(
+                        0xffffff,
+                        1
+                    );
+                    directionalLight.position.set(150, 150, -50);
+                    scene.add(directionalLight);
+                }
+            );
+
+            /** 剩下更复杂的方法:
+             * 自定义着色器材质
+             * THREE.MeshStandardMaterial的map属性使用纹理贴图来模拟多种材质的效果
+             */
+        </script>
+    </body>
+</html>

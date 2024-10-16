@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>canvas-1</title>
+    </head>
+    <style>
+        .canvas {
+            /**
+        /* css设置canvas的宽高不会改变分辨率
+        /* 默认分辨率为300*150
+        /* 图形可能会失真或模糊 
+        */
+            background-color: pink;
+        }
+    </style>
+    <body>
+        <canvas class="canvas"></canvas>
+    </body>
+    <script>
+        const canvas = document.getElementsByClassName("canvas")[0];
+        // 通过html或js设置宽高会改变分辨率
+        canvas.width = 400;
+        canvas.height = 400;
+        const ctx = canvas.getContext("2d");
+        const image = new Image();
+        image.src = "../assets/test.png";
+        image.onload = function () {
+            ctx.drawImage(image, 0, 0);
+        };
+
+        // 类型化数组
+        let intArray = new Int32Array(10);
+        for (let i = 0; i < intArray.length; i++) {
+            intArray[i] = i * 2000;
+        }
+
+        let sum = 0;
+        for (let i = 0; i < intArray.length; i++) {
+            sum += intArray[i];
+        }
+        console.log("32位有符号整数", intArray);
+        console.log("总和：" + sum);
+    </script>
+    <!-- 数据类型：float/int/bool -->
+    <!-- 向量类型：
+    vec2、vec3、vec4（二维、三维、四维） float
+    ivec2、ivec3、ivec4 int
+    bvec2、bvec3、bvec4 bool
+-->
+    <!-- 矩阵类型 mat2、mat3、mat4 -->
+    <!-- 采样器类型 sampler2D、samplerCube (用于纹理采样) -->
+    <!-- 变量修饰符
+    attribute 用于顶点着色器，定义从顶点缓冲区传入的变量（仅在顶点着色器中使用）
+    uniform 定义在整个渲染过程中保持不变的变量，常用于传递变换矩阵、光照参数等 
+    varying 用于在顶点着色器和片段着色器之间传递插值数据 
+-->
+    <!-- 内置变量
+    顶点着色器：gl_Position、gl_PointSize (顶点变换后的位置、大小)
+    片段着色器：gl_FragColor (片段的最终颜色)
+-->
+    <!-- 顶点着色器 -->
+    <script type="x-shader/x-vertex"></script>
+    <!-- 片段着色器 -->
+    <script type="x-shader/x-fragment"></script>
+</html>

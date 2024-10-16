@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Threejs</title>
+    </head>
+    <body>
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "./js/three.js-r148/build/three.module.js",
+                    "three/addons/": "./js/three.js-r148/examples/jsm/"
+                }
+            }
+        </script>
+        <script type="module">
+            // 引入three.js
+            import * as THREE from "three";
+            // 引入轨道控制器扩展库OrbitControls.js
+            import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+            // 引入扩展库GLTFLoader.js
+            import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+            // 定义画布尺寸
+            const width = 500;
+            const height = 500;
+
+            // 创建三维场景
+            const scene = new THREE.Scene();
+
+            // 物体形状
+            const boxGeometry = new THREE.BoxGeometry(100, 100, 100); // 长方体
+            // const CylinderGeometry = new THREE.CylinderGeometry(); // 圆柱体
+            // const SphereGeometry = new THREE.SphereGeometry(); // 球体
+            // const ConeGeometry = new THREE.ConeGeometry(); // 圆锥
+            // const PlaneGeometry = new THREE.PlaneGeometry(); // 矩形平面
+            // const CircleGeometry = new THREE.CircleGeometry(); // 圆平面
+
+            // 形状的一些方法
+            // const WireframeGeometry = new THREE.WireframeGeometry(Geometry); // 线框
+            // const EdgesGeometry = new THREE.EdgesGeometry(Geometry); // 边缘信息
+
+            /** 物体外观：材质
+             * MeshBasicMaterial  网络基础材质  -- 不受光照影响
+             * MeshLambertMaterial  网络漫反射材质，创建一个不光滑的表面，不产生镜面高光，受光照影响，可以产生阴影效果
+             * MeshStandardMaterial  MeshPhysicalMaterial 物理材质
+             * PointsMaterial  点材质，用于创建点云或粒子系统（星空或宇宙模拟），可以渲染大量的点  -- 不受光照影响
+             * LineBasicMaterial  线基础材质
+             * SpriteMaterial  精灵材质，通常用于粒子系统（雨/雪/火花）、图标、标签，关键特性：始终面向相机（二维）  -- 不受光照影响
+             * MeshPhongMaterial 高光材质，比物理材质计算量小（裹着塑料膜的感觉）
+             */
+            // 材质可以叠加吗？见test2
+            const material = new THREE.MeshLambertMaterial({
+                color: 0xff0000,
+                transparent: true, // 开启透明
+                opacity: 0.8 // 设置透明度
+            });
+
+            // 物体：网格模型
+            const mesh = new THREE.Mesh(boxGeometry, material);
+
+            // 模型位置（基于坐标轴中心）
+            mesh.position.set(50, 50, 50);
+
+            // 将物体添加到场景中
+            scene.add(mesh);
+
+            /** 透视投影相机（类似于人眼，常用）
+             * 视锥体（fov, aspect, near, far）之内的物体才会被渲染
+             * fov  视场（摄像机展开的角度）  default: 50
+             * aspect  宽高比=width/height  default: 1
+             * near  相机视锥体近裁截面到相机的距离=最近可以看到的  default: 0.1
+             * far  相机视锥体远裁截面到相机的具体=最远可以看到的  default: 2000
+             */
+            const camera = new THREE.PerspectiveCamera();
+
+            camera.position.set(200, 300, 400);
+
+            // 相机观察目标
+            camera.lookAt(mesh.position);
+
+            /** 光源
+             * AmbientLight 环境光
+             * PointLight 点光源
+             * SpotLight 聚光灯光源
+             * DirectionalLight 平行光
+             */
+
+            //点光源：两个参数分别表示光源颜色和光照强度
+            // 参数1：0xffffff是纯白光,表示光源颜色
+            // 参数2：intensity  1.0,表示光照强度，可以根据需要调整
+            // decay 光源衰减，默认值是2.0，0.0不衰减
+            const pointLight = new THREE.PointLight(0xffffff, 1.0);
+
+            //点光源位置
+            pointLight.position.set(150, 150, 150);
+
+            scene.add(pointLight);
+
+            // 辅助观察坐标系(坐标系坐标轴线段尺寸大小)
+            // 红R、绿G、蓝B分别对应坐标系的x、y、z轴
+            const axesHelper = new THREE.AxesHelper(100);
+            scene.add(axesHelper);
+
+            // 创建渲染器对象
+            const renderer = new THREE.WebGLRenderer();
+
+            // 定义渲染区域尺寸
+            renderer.setSize(width, height);
+
+            // 将场景渲染到画布上
+            renderer.render(scene, camera);
+            document.body.appendChild(renderer.domElement);
+        </script>
+    </body>
+</html>
