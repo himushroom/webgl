@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Threejs</title>
+    </head>
+    <style>
+        body {
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        .lineX {
+            position: absolute;
+            top: 450px;
+            left: 0;
+            width: 100vw;
+            height: 1px;
+            background-color: pink;
+        }
+        .lineY {
+            position: absolute;
+            left: 500px;
+            top: 0;
+            height: 100vh;
+            width: 1px;
+            background-color: pink;
+        }
+    </style>
+    <body>
+        <div class="lineX"></div>
+        <div class="lineY"></div>
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "./js/three.js-r148/build/three.module.js",
+                    "three/addons/": "./js/three.js-r148/examples/jsm/"
+                }
+            }
+        </script>
+        <script type="module">
+            // 引入three.js
+            import * as THREE from "three";
+            // 引入轨道控制器扩展库OrbitControls.js
+            import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+            // 引入扩展库GLTFLoader.js
+            import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+            //引入性能监视器stats.js
+            import Stats from "three/addons/libs/stats.module.js";
+
+            import { createBase } from "./base.js";
+            import { createMultiple } from "./multiple.js";
+
+            createBase({ THREE, OrbitControls, GLTFLoader, Stats });
+            createMultiple({ THREE, OrbitControls });
+        </script>
+    </body>
+</html>
