@@ -51,9 +51,13 @@
 
             import { createBase } from "./base.js";
             import { createMultiple } from "./multiple.js";
+            import { createGeometry } from "./geometry.js";
+            import { createMaterial } from "./material.js";
 
             createBase({ THREE, OrbitControls, GLTFLoader, Stats });
             createMultiple({ THREE, OrbitControls });
+            createGeometry({ THREE, OrbitControls });
+            createMaterial({ THREE, OrbitControls });
         </script>
     </body>
 </html>
