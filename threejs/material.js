@@ -1,7 +1,7 @@
 export const createMaterial = ({ THREE, OrbitControls }) => {
     // 定义画布尺寸
     const width = 1000;
-    const height = 300;
+    const height = 500;
 
     const scene = new THREE.Scene();
 
@@ -74,7 +74,8 @@ export const createMaterial = ({ THREE, OrbitControls }) => {
 
     // 环境光
     // 没有特定的方向，整体改变场景的光照明暗
-    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambient = new THREE.AmbientLight(0xffffff, 0);
+
     scene.add(ambient);
 
     // 平行光
@@ -87,7 +88,7 @@ export const createMaterial = ({ THREE, OrbitControls }) => {
 
     // 远小近大，fov越大视角越远，fov越小视角越近
     // 视锥体（fov, aspect, near, far）之内的物体才会被渲染
-    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 2000);
+    const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 2000);
     camera.position.set(0, 400, 400);
 
     camera.lookAt(0, 0, 0);

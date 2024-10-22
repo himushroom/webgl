@@ -7,9 +7,9 @@
     </head>
     <style>
         body {
-            margin: 0;
+            margin: 0 0 100px;
             width: 100vw;
-            height: 100vh;
+            height: 100%;
         }
         .lineX {
             position: absolute;
@@ -48,13 +48,14 @@
             import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
             //引入性能监视器stats.js
             import Stats from "three/addons/libs/stats.module.js";
+            import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 
             import { createBase } from "./base.js";
             import { createMultiple } from "./multiple.js";
             import { createGeometry } from "./geometry.js";
             import { createMaterial } from "./material.js";
 
-            createBase({ THREE, OrbitControls, GLTFLoader, Stats });
+            createBase({ THREE, OrbitControls, GLTFLoader, Stats, GUI });
             createMultiple({ THREE, OrbitControls });
             createGeometry({ THREE, OrbitControls });
             createMaterial({ THREE, OrbitControls });
