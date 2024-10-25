@@ -20,7 +20,9 @@ export const createGeometry = ({THREE, OrbitControls}) => {
 
     for (let i = 0; i < geometryTypes.length; i++) {
         const geometry = new THREE[geometryTypes[i]](50, 50, 100); // 几何体的参数数量不相同，但是-无所谓HH
-        
+        console.log('几何体',geometry);
+        console.log('顶点位置数据',geometry.attributes.position);
+        console.log('顶点索引数据',geometry.index);
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(120 * (i - 3) + 50, 50, 0)
         scene.add(mesh)

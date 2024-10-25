@@ -29,7 +29,8 @@ export const createMaterial = ({ THREE, OrbitControls }) => {
             type: "MeshBasicMaterial",
             params: {
                 color: 0xff0000,
-                side: THREE.DoubleSide
+                side: THREE.DoubleSide,
+                wireframe:true,//线条模式渲染mesh对应的三角形数据
             }
         },
         {
@@ -40,7 +41,8 @@ export const createMaterial = ({ THREE, OrbitControls }) => {
                 // 另外两个材质不支持shininess和specular属性
                 shininess: 25, // 高光部分的亮度，默认30
                 specular: 0x444444, // 高光部分的颜色
-                side: THREE.DoubleSide
+                side: THREE.DoubleSide,
+                wireframe:true,//线条模式渲染mesh对应的三角形数据
             }
         },
         {
@@ -48,7 +50,8 @@ export const createMaterial = ({ THREE, OrbitControls }) => {
             type: "MeshLambertMaterial",
             params: {
                 color: 0x00ff00,
-                side: THREE.DoubleSide
+                side: THREE.DoubleSide,
+                wireframe:true,//线条模式渲染mesh对应的三角形数据
             }
         },
     ];

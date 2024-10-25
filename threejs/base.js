@@ -20,6 +20,9 @@ export const createBase = ({
 
     // 物体形状
     const boxGeometry = new THREE.BoxGeometry(100, 100, 100); // 长方体
+    boxGeometry.scale(2, 1, 2);
+    // boxGeometry.translate(50, 0, 0);//偏移
+    // boxGeometry.center();
     // const CylinderGeometry = new THREE.CylinderGeometry(); // 圆柱体
     // const SphereGeometry = new THREE.SphereGeometry(); // 球体
     // const ConeGeometry = new THREE.ConeGeometry(); // 圆锥
@@ -214,6 +217,7 @@ export const createBase = ({
     document.body.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 0, 0); // 和lookAt设置一致
     // 如果OrbitControls改变了相机参数，重新调用渲染器渲染三维场景
     // 添加动画后可以不再监听，动画渲染时会持续调用renderer.render
     // controls.addEventListener("change", function () {

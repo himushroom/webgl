@@ -54,11 +54,13 @@
             import { createMultiple } from "./multiple.js";
             import { createGeometry } from "./geometry.js";
             import { createMaterial } from "./material.js";
+            import { createBufferGeometry } from "./BufferGeometry.js";
 
             createBase({ THREE, OrbitControls, GLTFLoader, Stats, GUI });
             createMultiple({ THREE, OrbitControls });
             createGeometry({ THREE, OrbitControls });
             createMaterial({ THREE, OrbitControls });
+            createBufferGeometry({ THREE, OrbitControls });
         </script>
     </body>
 </html>
