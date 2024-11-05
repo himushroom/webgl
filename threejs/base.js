@@ -51,6 +51,8 @@ export const createBase = ({
     };
     const material = new THREE.MeshLambertMaterial(obj);
 
+    console.log('material.color',material.color);
+
     // 物体：网格模型
     const mesh = new THREE.Mesh(boxGeometry, material);
 
