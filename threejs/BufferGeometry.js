@@ -97,15 +97,18 @@ export const createBufferGeometry = ({
     scene.add(directionalLight);
 
     // 辅助线
-    // const axesHelper = new THREE.AxesHelper(300);
-    // scene.add(axesHelper);
+    const axesHelper = new THREE.AxesHelper(300);
+    scene.add(axesHelper);
 
+    // 添加网格辅助工具
+    // const gridHelper = new THREE.GridHelper(300, 300);
+    // scene.add(gridHelper);
 
     const width = 300;
     const height = 300;
 
     const camera = new THREE.PerspectiveCamera()
-    camera.position.set(300, 300, 300)
+    camera.position.set(-300, 0, -80)
     camera.lookAt(0, 0, 0)
 
     const renderer = new THREE.WebGLRenderer({
@@ -113,7 +116,25 @@ export const createBufferGeometry = ({
     })
     renderer.setSize(width, height)
 
-    renderer.render(scene, camera)
+    const axis = new THREE.Vector3(0, 0, 1)
+    axis.normalize() // 向量归一化(归一化后只表示方向)
+
+    // line.translateOnAxis(axis, 100);
+
+    // let i = 0
+    function render() {
+        // i += 0.0001
+        // line.translateOnAxis(axis, i)
+        // 使用 rotateOnWorldAxis 方法旋转对象
+        // 每帧旋转 0.01 弧度（约 0.57 度）
+        // line.rotateOnWorldAxis(axis, 0.01);
+
+        renderer.render(scene, camera); //执行渲染操作
+        requestAnimationFrame(render); //请求再次执行渲染函数render，渲染下一帧
+    }
+    render();
+
+    // renderer.render(scene, camera)
 
     document.body.appendChild(renderer.domElement);
 

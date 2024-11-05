@@ -55,7 +55,9 @@ export const createBase = ({
     const mesh = new THREE.Mesh(boxGeometry, material);
 
     // 模型位置（基于坐标轴中心）
-    mesh.position.set(0, 0, 0);
+    mesh.position.set(100, 0, 0);
+    // 位置属性.position使用threejs三维向量对象Vector3表示的
+    console.log('模型位置属性.position的值', mesh.position);
 
     gui.add(mesh.position, "x", 0, 180);
     gui.add(mesh.position, "y", 0, 180);
@@ -202,6 +204,12 @@ export const createBase = ({
     // 将场景渲染到画布上
     // 计算两帧渲染时间间隔和帧率
     const clock = new THREE.Clock();
+    //绕y轴的角度设置为60度
+    // mesh.rotation.y += Math.PI/3;
+    //绕y轴的角度增加60度
+    // mesh.rotation.y += Math.PI/3;
+    //绕y轴的角度减去60度
+    // mesh.rotation.z -= Math.PI/3;
     function render() {
         //requestAnimationFrame循环调用的函数中调用方法update(),来刷新时间
         stats.update();
@@ -210,7 +218,12 @@ export const createBase = ({
         // console.log("帧率FPS", 1000 / spt);
         renderer.render(scene, camera); //执行渲染操作
         // 当gui界面设置obj.bool为true,mesh执行旋转动画
-        if (obj1.bool) mesh.rotateY(0.001); // 自转0.001弧度
+        if (obj1.bool) {
+            // 他们都是以自身为中心进行旋转
+            mesh.rotateY(0.001); // 自转0.001弧度，每次设置的值会增量
+            mesh.rotation.y += 0.001; // 每次设置的值会进行覆盖
+        }
+
         requestAnimationFrame(render); //请求再次执行渲染函数render，渲染下一帧
     }
     render();

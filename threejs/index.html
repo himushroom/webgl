@@ -56,11 +56,17 @@
             import { createMaterial } from "./material.js";
             import { createBufferGeometry } from "./BufferGeometry.js";
 
+            import { rotateOnWorldAxis } from "./rotateOnWorldAxis.js";
+            import { normalize } from "./normalize.js";
+
             createBase({ THREE, OrbitControls, GLTFLoader, Stats, GUI });
             createMultiple({ THREE, OrbitControls });
             createGeometry({ THREE, OrbitControls });
             createMaterial({ THREE, OrbitControls });
             createBufferGeometry({ THREE, OrbitControls });
+
+            // rotateOnWorldAxis({ THREE, OrbitControls });
+            // normalize({ THREE, OrbitControls });
         </script>
     </body>
 </html>
